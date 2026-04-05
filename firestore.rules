@@ -1,0 +1,61 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: settings
+// Document ID: config
+// Fields:
+//   - logoText: string (required)
+//   - heroTitle: string (optional)
+//   - heroDesc: string (optional)
+//   - sections: list of objects (required)
+//   - clients: list of objects (required)
+//
+// Collection: users
+// Document ID: {userId}
+// Fields:
+//   - role: string (required, 'admin' or 'user')
+//   - email: string (required, email format)
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "moh.talb2030@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidConfig(data) {
+      return data.keys().hasAll(['logoText', 'sections', 'clients']) &&
+             data.logoText is string && data.logoText.size() < 100 &&
+             data.sections is list && data.clients is list;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // Settings Configuration
+    match /settings/config {
+      allow read: if true; // Publicly readable
+      allow write: if isAdmin() && isValidConfig(request.resource.data);
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId && request.resource.data.role == 'user';
+      allow update: if isAdmin();
+    }
+  }
+}

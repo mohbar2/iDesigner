@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --color-primary-dark: #000E1A;
+  --color-secondary-blue: #005FB8;
+  --color-whatsapp-green: #25D366;
+}
+
+@layer base {
+  body {
+    @apply bg-primary-dark text-white font-sans;
+  }
+}
+
+.bg-white-custom {
+  background-color: white;
+  color: #000E1A;
+}
+
+.btn-green {
+  @apply bg-whatsapp-green text-white px-6 py-3 rounded font-bold inline-flex items-center gap-2 transition-opacity hover:opacity-90;
+}
+
+.admin-panel-shadow {
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

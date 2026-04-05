@@ -1,0 +1,57 @@
+{
+  "entities": {
+    "config": {
+      "title": "Website Configuration",
+      "description": "Stores the entire website configuration including logo, sections order, and hero content.",
+      "type": "object",
+      "properties": {
+        "logoText": { "type": "string", "description": "The brand name displayed in the header." },
+        "logoUrl": { "type": "string", "description": "URL for the brand logo image." },
+        "heroTitle": { "type": "string", "description": "Main heading in the hero section." },
+        "heroDesc": { "type": "string", "description": "Description text in the hero section." },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" }
+            }
+          }
+        },
+        "clients": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "imageUrl": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["logoText", "sections", "clients"]
+    },
+    "user": {
+      "title": "User Profile",
+      "description": "Stores user roles and basic information.",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "email": { "type": "string", "format": "email" }
+      },
+      "required": ["role", "email"]
+    }
+  },
+  "firestore": {
+    "/settings/config": {
+      "schema": "config",
+      "description": "The global website configuration document."
+    },
+    "/users/{userId}": {
+      "schema": "user",
+      "description": "User profile document."
+    }
+  }
+}
